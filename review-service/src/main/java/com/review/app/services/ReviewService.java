@@ -11,16 +11,14 @@ public interface ReviewService {
 	void addReview(ReviewModel model);
 
 	/**
-	 * @param id
-	 * @param name
-	 */
-	void updateName(int id, String name);
-
-	/**
 	 * @return
 	 */
 	List<ReviewModel> findAll();
-
+    /**
+     * @param name
+     * @return
+     */
+    List<ReviewModel> findProductReview(String name);
 	/**
 	 * @param id
 	 */
