@@ -9,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.appinfo.InstanceInfo;
+import com.netflix.discovery.EurekaClient;
+import com.netflix.discovery.shared.Application;
 import com.review.app.entities.ReviewEntity;
 import com.review.app.model.ProductModel;
 import com.review.app.model.ReviewModel;
@@ -23,6 +26,9 @@ public class ReviewServiceImpl implements ReviewService{
 	@Autowired
 	private RestTemplate restTemplate;
 
+    @Autowired
+    private EurekaClient eurekaClient;
+    
 	DozerBeanMapper mapper = new DozerBeanMapper();
 
 	@Override
@@ -33,8 +39,14 @@ public class ReviewServiceImpl implements ReviewService{
 
 	@Override
 	public List<ReviewModel> findProductReview(String name) {
-		String url="http://localhost:9090/Product/getProduct/";
-		ResponseEntity<ProductModel> product= restTemplate.getForEntity(url+name, ProductModel.class);
+		//String url="http://localhost:9090/Product/getProduct/";
+		//ResponseEntity<ProductModel> product= restTemplate.getForEntity(url+name, ProductModel.class);
+		
+        Application application = eurekaClient.getApplication("product-service");
+        InstanceInfo instanceInfo = application.getInstances().get(0);
+        String url = "http://" + instanceInfo.getIPAddr() + ":" + instanceInfo.getPort() + "/" + "Product/getProduct/" + name;
+        System.out.println("URL" + url);
+        ResponseEntity<ProductModel> product= restTemplate.getForEntity(url, ProductModel.class);
 		List<ReviewEntity> entities = reviewRepository.findAllByProductId(product.getBody().getId());
 		List<ReviewModel> models = new ArrayList<>();
 		for(ReviewEntity entity : entities) {
