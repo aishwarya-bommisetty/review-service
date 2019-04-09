@@ -7,6 +7,17 @@ package com.review.app.model;
 
 public class ProductModel {
 	
+	public ProductModel() {
+		super();
+	}
+	
+	public ProductModel(int id, String name, String description) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.description = description;
+	}
+
 	private int id;
 	
 	private String name;
