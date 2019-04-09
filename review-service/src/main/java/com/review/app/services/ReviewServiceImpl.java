@@ -39,8 +39,6 @@ public class ReviewServiceImpl implements ReviewService{
 
 	@Override
 	public List<ReviewModel> findProductReview(String name) {
-		//String url="http://localhost:9090/Product/getProduct/";
-		//ResponseEntity<ProductModel> product= restTemplate.getForEntity(url+name, ProductModel.class);
 		
         Application application = eurekaClient.getApplication("product-service");
         InstanceInfo instanceInfo = application.getInstances().get(0);
