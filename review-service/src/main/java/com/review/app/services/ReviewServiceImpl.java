@@ -7,9 +7,9 @@ import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.review.app.entities.ReviewEntity;
+import com.review.app.feignClient.ProductClient;
 import com.review.app.model.ProductModel;
 import com.review.app.model.ReviewModel;
 import com.review.app.repository.ReviewRepository;
@@ -19,10 +19,10 @@ public class ReviewServiceImpl implements ReviewService{
 	
 	@Autowired
 	private ReviewRepository reviewRepository;
-	
+    
 	@Autowired
-	private RestTemplate restTemplate;
-
+	ProductClient productClient;
+	
 	DozerBeanMapper mapper = new DozerBeanMapper();
 
 	@Override
@@ -32,9 +32,8 @@ public class ReviewServiceImpl implements ReviewService{
 	}
 
 	@Override
-	public List<ReviewModel> findProductReview(String name) {
-		String url="http://localhost:9090/Product/getProduct/";
-		ResponseEntity<ProductModel> product= restTemplate.getForEntity(url+name, ProductModel.class);
+	public List<ReviewModel> findProductReview(String name) {		
+		ResponseEntity<ProductModel> product= productClient.getProductByName(name);
 		List<ReviewEntity> entities = reviewRepository.findAllByProductId(product.getBody().getId());
 		List<ReviewModel> models = new ArrayList<>();
 		for(ReviewEntity entity : entities) {
