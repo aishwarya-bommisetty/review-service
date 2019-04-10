@@ -19,12 +19,6 @@ public class ReviewServiceImpl implements ReviewService{
 	
 	@Autowired
 	private ReviewRepository reviewRepository;
-	
-//	@Autowired
-//	private RestTemplate restTemplate;
-
-//    @Autowired
-//    private EurekaClient eurekaClient;
     
 	@Autowired
 	ProductClient productClient;
@@ -38,14 +32,7 @@ public class ReviewServiceImpl implements ReviewService{
 	}
 
 	@Override
-	public List<ReviewModel> findProductReview(String name) {
-		
-//        Application application = eurekaClient.getApplication("product-service");
-//        InstanceInfo instanceInfo = application.getInstances().get(0);
-//        String url = "http://" + instanceInfo.getIPAddr() + ":" + instanceInfo.getPort() + "/" + "Product/getProduct/" + name;
-//        System.out.println("URL" + url);
-//        ResponseEntity<ProductModel> product= restTemplate.getForEntity(url, ProductModel.class);
-		
+	public List<ReviewModel> findProductReview(String name) {		
 		ResponseEntity<ProductModel> product= productClient.getProductByName(name);
 		List<ReviewEntity> entities = reviewRepository.findAllByProductId(product.getBody().getId());
 		List<ReviewModel> models = new ArrayList<>();
